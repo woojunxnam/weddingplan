@@ -1,10 +1,10 @@
 # Tupper Manor Wedding Cost Planner
 
-A one-page GitHub Pages-compatible static wedding venue cost planner for comparing Tupper Manor 2027 wedding package scenarios.
+A one-page GitHub Pages-compatible static wedding venue cost planner and PDF summary for comparing Tupper Manor 2027 wedding package scenarios.
 
 ## Project purpose
 
-This planner helps compare Tupper Manor wedding estimates across seasons, months, day types, guest counts, bar packages, ceremony choices, add-ons, discounts, administrative fee assumptions, and tax assumptions. It is designed for transparent line-item planning with a save-and-compare scenario table backed by browser `localStorage`.
+This planner helps compare Tupper Manor wedding estimates across seasons, months, day types, guest counts, bar packages, ceremony choices, add-ons, discounts, administrative fee assumptions, and tax assumptions. It also summarizes the important PDF details so a couple can understand package inclusions, date pricing, bar choices, add-ons, taxes, and venue-confirmation questions without reading the full PDF first.
 
 ## How to run locally
 
@@ -28,7 +28,17 @@ Then visit `http://localhost:8000`.
 
 ## Data source note
 
-The project request says the Tupper Manor 2027 wedding package PDF should be treated as the source of truth. The PDF attachment was not available in this workspace, so this implementation uses the pricing, package details, warnings, and assumptions supplied in the request as the data source. If the PDF differs, update the centralized `TUPPER_MANOR_2027` object in `assets/js/app.js`.
+The project treats `2027 tupper wedding package.pdf` on `main` as the source of truth. The centralized `TUPPER_MANOR_2027` object in `assets/js/app.js` was checked against that PDF for package price, date minimums, rental fees, discounts, ceremony timing, bar pricing, add-ons, taxes, administrative fee language, sold-out notes, and market-price warnings.
+
+## Page features
+
+- PDF-at-a-glance summary cards for the package, date costs, timing, and contract checks.
+- Dynamic month/day options that avoid showing NYE outside December.
+- Live estimate with per-guest total, warnings, cost tiles, and a detailed line-item table.
+- Season cards summarizing published F&B minimums and property-rental pricing.
+- All-date comparison table using the active guest, bar, add-on, tax, and fee assumptions.
+- Save, rename, load, and delete browser-local scenarios with `localStorage`.
+- Package guide for included items, bar tiers, and common per-guest add-ons.
 
 ## Important calculation assumptions
 
@@ -40,8 +50,9 @@ The project request says the Tupper Manor 2027 wedding package PDF should be tre
 - Applied F&B is the greater of raw F&B and the selected date's F&B minimum.
 - Engagement gift discount applies only to property rental when enabled.
 - Default tax is `7%`, modeled as `6.25%` MA tax plus `0.75%` city tax.
-- Default tax mode taxes applied F&B plus administrative fee.
-- Spring Saturday is marked sold out. Because the request did not provide distinct Spring Saturday pricing, the calculator displays Spring Friday/Sunday pricing as a reference while showing the sold-out warning.
+- Default tax mode uses a PDF-style taxable scope: applied F&B, property rental, ceremony, and taxable administrative fee.
+- Spring Saturday is marked sold out and reference-only because the PDF does not provide a bookable Spring Saturday price.
+- NYE is only shown for December, uses Holiday Saturday/NYE pricing, and does not automatically receive the engagement gift discount because the discount text does not list NYE.
 
 ## Admin fee uncertainty note
 
@@ -62,7 +73,6 @@ The engagement gift discount toggle is enabled by default but is not treated as 
 
 ## Known limitations
 
-- The actual PDF was not available in this workspace, so PDF conflicts could not be independently checked.
 - Market-price items require manual estimates and venue confirmation.
 - Taxes and administrative fee scope may differ in the final venue contract.
 - Saved scenarios are stored per browser/device with `localStorage` and are not synced.
