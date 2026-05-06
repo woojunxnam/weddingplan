@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupper Manor Wedding Cost Planner</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="eyebrow">Tupper Manor · Beverly, MA · 2027 package year</p>
+      <h1>Tupper Manor Wedding Cost Planner</h1>
+      <p>Compare date, guest count, bar, food, add-on, discount, fee, and tax assumptions with transparent line-item math.</p>
+      <div class="hero__actions">
+        <button id="printButton" class="button button--secondary" type="button">Print estimate</button>
+        <a class="button" href="#estimate">View estimate</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="card" id="overview">
+      <div class="section-heading">
+        <span>1</span>
+        <div>
+          <h2>Overview</h2>
+          <p>This planner uses the Tupper Manor 2027 wedding package pricing values provided for this project. Change any assumption to compare full-season options, not only May, June, and September.</p>
+        </div>
+      </div>
+      <div class="notice notice--info">
+        <strong>Default setup:</strong> 100 guests, Tupper Brands open bar, onsite ceremony, engagement gift discount enabled, 22% administrative fee, and 7% tax. The discount must be confirmed with the venue.
+      </div>
+      <div id="activeWarnings" class="warnings" aria-live="polite"></div>
+    </section>
+
+    <form id="plannerForm" class="planner-grid">
+      <section class="card" id="date-inputs">
+        <div class="section-heading">
+          <span>2</span>
+          <div>
+            <h2>Date &amp; Guest Inputs</h2>
+            <p>Choose the month and day type to load the matching season, F&amp;B minimum, and rental fee.</p>
+          </div>
+        </div>
+        <div class="form-grid">
+          <label>Guest count
+            <input id="guestCount" type="number" min="1" step="1" value="100" required>
+          </label>
+          <label>Month
+            <select id="month"></select>
+          </label>
+          <label>Day
+            <select id="dayType"></select>
+          </label>
+          <label>Target budget minimum
+            <input id="budgetMin" type="number" min="0" step="100" value="25000">
+          </label>
+          <label>Target budget maximum
+            <input id="budgetMax" type="number" min="0" step="100" value="35000">
+          </label>
+          <label class="check-row">
+            <input id="ceremonyEnabled" type="checkbox" checked>
+            <span>Onsite ceremony ($1,000, adds 30 minutes)</span>
+          </label>
+          <label class="check-row">
+            <input id="engagementDiscountEnabled" type="checkbox" checked>
+            <span>Apply engagement gift discount — confirm with venue</span>
+          </label>
+        </div>
+        <div class="preset-panel">
+          <h3>Preset scenarios</h3>
+          <div id="presetButtons" class="button-row"></div>
+        </div>
+      </section>
+
+      <section class="card" id="food-package">
+        <div class="section-heading">
+          <span>3</span>
+          <div>
+            <h2>Food &amp; Beverage Package</h2>
+            <p>The required wedding package is $140 per person before bar and optional food upgrades.</p>
+          </div>
+        </div>
+        <details open>
+          <summary>What’s included</summary>
+          <ul id="includedList" class="columns"></ul>
+        </details>
+        <label>Custom additional food &amp; beverage amount
+          <input id="customFoodBeverageAmount" type="number" min="0" step="50" value="0">
+        </label>
+      </section>
+
+      <section class="card" id="bar-package">
+        <div class="section-heading">
+          <span>4</span>
+          <div>
+            <h2>Bar Package</h2>
+            <p>Open bar pricing is based on 4.5 hours. Bar closes 30 minutes before event end.</p>
+          </div>
+        </div>
+        <label>Bar option
+          <select id="barOption"></select>
+        </label>
+        <label id="consumptionTabWrap" class="hidden">Consumption tab custom estimate
+          <input id="consumptionTabAmount" type="number" min="0" step="100" value="0">
+        </label>
+      </section>
+
+      <section class="card" id="optional-upgrades">
+        <div class="section-heading">
+          <span>5</span>
+          <div>
+            <h2>Optional Appetizer / Duet Upgrade</h2>
+            <p>Add an appetizer course or choose a duet entrée upgrade.</p>
+          </div>
+        </div>
+        <label class="check-row">
+          <input id="optionalAppetizer" type="checkbox">
+          <span>Add optional appetizer course ($8/person)</span>
+        </label>
+        <label>Duet upgrade
+          <select id="duetUpgrade"></select>
+        </label>
+        <label id="marketDuetWrap" class="hidden">Market-price lobster tail custom estimate
+          <input id="marketDuetAmount" type="number" min="0" step="100" value="0">
+        </label>
+      </section>
+
+      <section class="card" id="cocktail-enhancements">
+        <div class="section-heading">
+          <span>6</span>
+          <div>
+            <h2>Cocktail Hour Enhancements</h2>
+            <p>Select any per-person enhancements to include in raw F&amp;B.</p>
+          </div>
+        </div>
+        <div id="cocktailOptions" class="check-grid"></div>
+      </section>
+
+      <section class="card" id="late-night-snacks">
+        <div class="section-heading">
+          <span>7</span>
+          <div>
+            <h2>Late-Night Snacks</h2>
+            <p>Select any late-night snack stations to include in raw F&amp;B.</p>
+          </div>
+        </div>
+        <div id="snackOptions" class="check-grid"></div>
+      </section>
+
+      <section class="card" id="fees-taxes">
+        <div class="section-heading">
+          <span>8</span>
+          <div>
+            <h2>Fee &amp; Tax Assumptions</h2>
+            <p>Change fee scope and tax assumptions to test conservative or contract-specific estimates.</p>
+          </div>
+        </div>
+        <div class="notice notice--warning">The 22% administrative fee is not a gratuity. Additional gratuity may still be expected.</div>
+        <div class="form-grid">
+          <label>Administrative fee mode
+            <select id="adminMode"></select>
+          </label>
+          <label>Administrative fee rate (%)
+            <input id="adminRate" type="number" min="0" step="0.1" value="22">
+          </label>
+          <label id="manualAdminWrap" class="hidden">Manual admin amount
+            <input id="manualAdminAmount" type="number" min="0" step="50" value="0">
+          </label>
+          <label>MA tax (%)
+            <input id="maTaxRate" type="number" min="0" step="0.01" value="6.25">
+          </label>
+          <label>City tax (%)
+            <input id="cityTaxRate" type="number" min="0" step="0.01" value="0.75">
+          </label>
+          <label>Taxable scope
+            <select id="taxMode"></select>
+          </label>
+        </div>
+      </section>
+    </form>
+
+    <section class="card card--wide" id="estimate">
+      <div class="section-heading">
+        <span>9</span>
+        <div>
+          <h2>Detailed Estimate</h2>
+          <p>Every subtotal is recalculated when inputs change.</p>
+        </div>
+      </div>
+      <div class="estimate-topline">
+        <div>
+          <p class="eyebrow">Estimated total</p>
+          <strong id="estimatedTotal">$0</strong>
+        </div>
+        <span id="budgetBadge" class="badge">Within budget</span>
+      </div>
+      <div id="recommendation" class="recommendation"></div>
+      <div class="table-wrap">
+        <table class="estimate-table">
+          <tbody id="estimateRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card card--wide" id="scenarios">
+      <div class="section-heading">
+        <span>10</span>
+        <div>
+          <h2>Save &amp; Compare Scenarios</h2>
+          <p>Saved scenarios stay in this browser with localStorage. If storage is blocked, the calculator continues to work without saved rows.</p>
+        </div>
+      </div>
+      <div class="scenario-controls">
+        <label>Scenario name
+          <input id="scenarioName" type="text" value="Current estimate">
+        </label>
+        <button id="saveScenario" class="button" type="button">Save current scenario</button>
+        <button id="clearScenarios" class="button button--danger" type="button">Clear all saved scenarios</button>
+      </div>
+      <div class="table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Month</th>
+              <th>Day</th>
+              <th>Guests</th>
+              <th>Bar</th>
+              <th>Rental after discount</th>
+              <th>Applied F&amp;B</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="scenarioRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card card--wide" id="questions">
+      <div class="section-heading">
+        <span>11</span>
+        <div>
+          <h2>Questions to Confirm with Venue</h2>
+          <p>Use this checklist before signing or comparing against other venues.</p>
+        </div>
+      </div>
+      <div id="questionChecklist" class="check-grid check-grid--questions"></div>
+    </section>
+
+    <section class="card card--wide" id="disclaimer">
+      <div class="section-heading">
+        <span>12</span>
+        <div>
+          <h2>Assumptions / Disclaimer</h2>
+          <p>Important source and calculation notes.</p>
+        </div>
+      </div>
+      <p class="notice notice--danger"><strong>Important:</strong> This planner is an estimate based on the 2027 Tupper Manor wedding package PDF. Final pricing may vary based on contract terms, taxes, administrative fee treatment, F&amp;B minimum interpretation, guest count, menu selections, bar consumption, market-price items, availability, vendor policies, gratuity, and date-specific terms. Always confirm the final all-in proposal directly with the venue before making a decision.</p>
+      <ul>
+        <li>The PDF attachment was not available in this workspace, so the implementation uses the pricing and package details supplied in the request as the project data source.</li>
+        <li>Engagement gift discounts are marked “confirm with venue” because the special is stated as valid through June 1, 2026.</li>
+        <li>Spring Saturday is marked sold out with unavailable pricing in the prompt; this planner displays the Spring Friday/Sunday pricing as a reference while warning that the date is sold out.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
